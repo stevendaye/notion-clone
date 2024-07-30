@@ -10,30 +10,30 @@ export const Hero = () => {
         >
           <Image
             src={"/documents.png"}
-            className="object-contain dark:hidden"
             alt="Documents"
             fill
+            className="object-contain dark:hidden"
           />
           <Image
             src={"/documents-dark.png"}
-            className="object-contain hidden dark:block"
             alt="Documents"
             fill
+            className="object-contain hidden dark:block"
           />
         </div>
 
         <div className="relative w-[400px] h-[400px] md:hidden">
           <Image
             src={"/reading.png"}
-            className="object-contain dark:hidden"
             alt="Reading"
             fill
+            className="object-contain dark:hidden"
           />
           <Image
             src={"/reading-dark.png"}
-            className="object-contain hidden dark:block"
             alt="Reading"
             fill
+            className="object-contain hidden dark:block"
           />
         </div>
       </div>

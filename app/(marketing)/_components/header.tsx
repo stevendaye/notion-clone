@@ -39,7 +39,7 @@ export const Header = () => {
       {!isAuthenticated && !isLoading && (
         <SignInButton mode="modal">
           <Button>
-            Get Notion Clone Free <ArrowRight className="h-4 w-4 ml-2" />{" "}
+            Get Notion Clone Free <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </SignInButton>
       )}
