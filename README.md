@@ -1,7 +1,10 @@
 # Notion Clone | Note Taking App
 
-Clone of Notion Note Taking App. This clone covers the core fundamental features of Notion and what it was designed for
-**Status: In Progress** (This project is currently in Progress)
+Clone of Notion Note Taking App. This clone covers the core fundamental features of Notion and what it was designed for.
+
+### Status: In Progress
+
+This project is currently in Progress.
 
 ![Alt text](public/welcome-page.png)
 

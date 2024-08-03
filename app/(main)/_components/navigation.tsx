@@ -1,14 +1,30 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { useMutation } from "convex/react";
+import { toast } from "sonner";
+
+import { api } from "@/convex/_generated/api";
+import { UserItem } from "./user-item";
+import { Item } from "./item";
+import { DocumentList } from "./document-list";
 
 export const Navigation = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const pathname = usePathname();
+
+  const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -17,7 +33,9 @@ export const Navigation = () => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const animationTime = 300;
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseDown = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -78,12 +96,23 @@ export const Navigation = () => {
     }
   };
 
+  const handleCreate = () => {
+    const promise = create({ title: "Untitled" });
+
+    toast.promise(promise, {
+      loading: "Creating a new note",
+      success: "New note created",
+      error: "Failed to create a new note",
+    });
+  };
+
   useEffect(() => {
     if (isMobile) {
       collapse();
     } else {
       resetWidth();
     }
+    /* trunk-ignore(eslint/react-hooks/exhaustive-deps) */
   }, [isMobile]);
 
   useEffect(() => {
@@ -101,29 +130,35 @@ export const Navigation = () => {
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
-        onClick={collapse}
       >
-        <div
-          role="button"
+        <button
           className={cn(
             `absolute top-3 right-2 w-6 h-6 text-muted-foreground rounded-sm hover:bg-neutral-300
             dark:hover:bg-neutral-600 opacity-0 group-hover/sidebar:opacity-100 transition`,
             isMobile && "opacity-100"
           )}
+          aria-label="Collapse Sidebar"
+          onClick={collapse}
         >
           <ChevronsLeft className="w-6 h-6" />
-        </div>
+        </button>
+
         <div>
-          <p>Action Items</p>
+          <UserItem />
+          <Item onClick={() => {}} label={"Search"} isSearch icon={Search} />
+          <Item onClick={() => {}} label={"Settings"} icon={Settings} />
+          <Item onClick={handleCreate} label={"New Page"} icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          <p>Documents</p>
+          <DocumentList />
         </div>
-        <div
+
+        <button
+          aria-label="Resize Sidebar"
           onMouseDown={handleMouseDown}
-          onClick={resetWidth}
           className="absolute opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize
           right-0 top-0 w-1 bg-primary/10 h-full"
+          onClick={resetWidth}
         />
       </aside>
 
@@ -137,11 +172,13 @@ export const Navigation = () => {
       >
         <nav className="bg-transparent px-3 py-2 w-full">
           {isCollapsed && (
-            <MenuIcon
-              onClick={resetWidth}
-              role="button"
+            <button
+              aria-label="Expand Sidebar"
               className="w-6 h-6 text-muted-foreground"
-            />
+              onClick={resetWidth}
+            >
+              <MenuIcon />
+            </button>
           )}
         </nav>
       </div>
