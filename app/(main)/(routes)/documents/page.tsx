@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
+import { handleToast } from "@/utils/toaster";
 import { useUser } from "@clerk/clerk-react";
 import { useMutation } from "convex/react";
 import { CirclePlus } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
 
 const DocumentsPage = () => {
   const { user } = useUser();
@@ -15,11 +15,12 @@ const DocumentsPage = () => {
   const onCreate = () => {
     const promise = create({ title: "Untitled" });
 
-    toast.promise(promise, {
-      loading: "Creating a new note...",
-      success: "New note created",
-      error: "Failed to create a new note",
-    });
+    handleToast(
+      promise,
+      "Creating a new note...",
+      "New note created",
+      "Failed to create a new note"
+    );
   };
 
   return (

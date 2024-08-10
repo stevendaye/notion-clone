@@ -3,7 +3,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
@@ -25,6 +24,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@clerk/clerk-react";
+import { handleToast } from "@/utils/toaster";
 
 interface ItemProps {
   id?: Id<"documents">;
@@ -36,7 +36,7 @@ interface ItemProps {
   label: string;
   icon: LucideIcon;
   onExpand?: () => void;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const Item = ({
@@ -63,19 +63,6 @@ export const Item = ({
   ) => {
     event.stopPropagation();
     onExpand?.();
-  };
-
-  const handleToast = (
-    promise: Promise<void | null>,
-    loading: string,
-    success: string,
-    error: string
-  ) => {
-    toast.promise(promise, {
-      loading,
-      success,
-      error,
-    });
   };
 
   const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

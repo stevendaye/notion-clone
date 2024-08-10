@@ -5,20 +5,29 @@ import { cn } from "@/lib/utils";
 import {
   ChevronsLeft,
   MenuIcon,
+  Plus,
   PlusCircle,
   Search,
   Settings,
+  Trash,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useMutation } from "convex/react";
-import { toast } from "sonner";
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 import { api } from "@/convex/_generated/api";
 import { UserItem } from "./user-item";
 import { Item } from "./item";
 import { DocumentList } from "./document-list";
+import { handleToast } from "@/utils/toaster";
+import { TrashBox } from "./trash-box";
 
 export const Navigation = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -99,11 +108,12 @@ export const Navigation = () => {
   const handleCreate = () => {
     const promise = create({ title: "Untitled" });
 
-    toast.promise(promise, {
-      loading: "Creating a new note",
-      success: "New note created",
-      error: "Failed to create a new note",
-    });
+    handleToast(
+      promise,
+      "Creating a new note",
+      "New note created",
+      "Failed to create a new note"
+    );
   };
 
   useEffect(() => {
@@ -149,8 +159,21 @@ export const Navigation = () => {
           <Item onClick={() => {}} label={"Settings"} icon={Settings} />
           <Item onClick={handleCreate} label={"New Page"} icon={PlusCircle} />
         </div>
+
         <div className="mt-4">
           <DocumentList />
+          <Item onClick={handleCreate} label="Add a page" icon={Plus} />
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Trash" icon={Trash} />
+            </PopoverTrigger>
+            <PopoverContent
+              side={isMobile ? "bottom" : "right"}
+              className="w-72 p-0"
+            >
+              <TrashBox />
+            </PopoverContent>
+          </Popover>
         </div>
 
         <button
