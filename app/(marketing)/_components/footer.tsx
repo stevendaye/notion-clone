@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-export const Footer = () => {
+export const Footer: React.FC = () => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center w-full px-6 py-4 bg-background z-50 dark:bg-[#1F1F1F]">

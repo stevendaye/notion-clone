@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useRouter } from "next/navigation";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,6 +31,9 @@ interface ItemProps {
   active?: boolean;
   expanded?: boolean;
   isSearch?: boolean;
+  isSettings?: boolean;
+  isNewPage?: boolean;
+  isTrash?: boolean;
   level?: number;
   label: string;
   icon: LucideIcon;
@@ -45,6 +47,9 @@ export const Item = ({
   active,
   expanded,
   isSearch,
+  isSettings,
+  isNewPage,
+  isTrash,
   level = 0,
   label,
   icon: Icon,
@@ -110,7 +115,7 @@ export const Item = ({
     >
       {!!id && (
         <button
-          className="h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1"
+          className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1"
           onClick={handleExpand}
         >
           <ChevronIcon className="w-4 h-4 shrink-0 text-muted-foreground/50" />
@@ -141,6 +146,34 @@ export const Item = ({
             <span className="text-xs">⌘</span>K
           </kbd>
         )}
+
+        {isSettings && (
+          <kbd
+            className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border
+            bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+          >
+            <span className="text-xs">⌘</span>M
+          </kbd>
+        )}
+
+        {isNewPage && (
+          <kbd
+            className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border
+            bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+          >
+            <span className="text-xs">⌘</span>I
+          </kbd>
+        )}
+
+        {isTrash && (
+          <kbd
+            className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border
+            bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+          >
+            <span className="text-xs">⌘</span>B
+          </kbd>
+        )}
+
         {!!id && (
           <div className="flex ml-auto items-center gap-x-2">
             <DropdownMenu>

@@ -11,8 +11,8 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { ElementRef, useEffect, useRef, useState } from "react";
+import { useParams, usePathname } from "next/navigation";
+import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useMutation } from "convex/react";
 
@@ -28,10 +28,17 @@ import { Item } from "./item";
 import { DocumentList } from "./document-list";
 import { handleToast } from "@/utils/toaster";
 import { TrashBox } from "./trash-box";
+import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
+import { Navbar } from "./navbar";
 
-export const Navigation = () => {
+export const Navigation: React.FC = () => {
+  const search = useSearch();
+  const settings = useSettings();
+
   const isMobile = useMediaQuery("(max-width: 768px)");
   const pathname = usePathname();
+  const params = useParams();
 
   const create = useMutation(api.documents.create);
 
@@ -40,18 +47,9 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
   const animationTime = 300;
-
-  const handleMouseDown = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    isResizingRef.current = true;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
+  const trashRef = useRef<HTMLButtonElement>(null);
 
   const handleMouseMove = (event: MouseEvent) => {
     if (!isResizingRef.current) return;
@@ -74,6 +72,17 @@ export const Navigation = () => {
     isResizingRef.current = false;
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseDown = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    isResizingRef.current = true;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   const resetWidth = () => {
@@ -105,7 +114,7 @@ export const Navigation = () => {
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     const promise = create({ title: "Untitled" });
 
     handleToast(
@@ -114,7 +123,33 @@ export const Navigation = () => {
       "New note created",
       "Failed to create a new note"
     );
-  };
+  }, [create]);
+
+  // Create New Page with command ctrl+i;
+  useEffect(() => {
+    const keydownEvent = (e: KeyboardEvent) => {
+      if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        handleCreate();
+      }
+    };
+
+    document.addEventListener("keydown", keydownEvent);
+    return () => document.removeEventListener("keydown", keydownEvent);
+  }, [handleCreate]);
+
+  // Open Trash Popup on command ctrl+b
+  useEffect(() => {
+    const keydownEvent = (e: KeyboardEvent) => {
+      if (e.key === "b" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        trashRef.current?.click();
+      }
+    };
+
+    document.addEventListener("keydown", keydownEvent);
+    return () => document.removeEventListener("keydown", keydownEvent);
+  }, []);
 
   useEffect(() => {
     if (isMobile) {
@@ -155,17 +190,33 @@ export const Navigation = () => {
 
         <div>
           <UserItem />
-          <Item onClick={() => {}} label={"Search"} isSearch icon={Search} />
-          <Item onClick={() => {}} label={"Settings"} icon={Settings} />
-          <Item onClick={handleCreate} label={"New Page"} icon={PlusCircle} />
+          <Item
+            onClick={search.onOpen}
+            label={"Search"}
+            isSearch
+            icon={Search}
+          />
+          <Item
+            onClick={settings.onOpen}
+            label={"Settings"}
+            isSettings
+            icon={Settings}
+          />
+          <Item
+            onClick={handleCreate}
+            label={"New Page"}
+            isNewPage
+            icon={PlusCircle}
+          />
         </div>
 
         <div className="mt-4">
           <DocumentList />
+
           <Item onClick={handleCreate} label="Add a page" icon={Plus} />
           <Popover>
-            <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash} />
+            <PopoverTrigger className="w-full mt-4" ref={trashRef}>
+              <Item label="Trash" isTrash icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
               side={isMobile ? "bottom" : "right"}
@@ -193,17 +244,21 @@ export const Navigation = () => {
           isMobile && "left-0 w-full"
         )}
       >
-        <nav className="bg-transparent px-3 py-2 w-full">
-          {isCollapsed && (
-            <button
-              aria-label="Expand Sidebar"
-              className="w-6 h-6 text-muted-foreground"
-              onClick={resetWidth}
-            >
-              <MenuIcon />
-            </button>
-          )}
-        </nav>
+        {params.documentId ? (
+          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
+        ) : (
+          <nav className="bg-transparent px-3 py-2 w-full">
+            {isCollapsed && (
+              <button
+                aria-label="Expand Sidebar"
+                className="w-6 h-6 text-muted-foreground"
+                onClick={resetWidth}
+              >
+                <MenuIcon />
+              </button>
+            )}
+          </nav>
+        )}
       </div>
     </>
   );

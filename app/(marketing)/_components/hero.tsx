@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export const Hero = () => {
+export const Hero: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center max-w-5xl">
       <div className="flex items-center">

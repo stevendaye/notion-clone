@@ -11,7 +11,7 @@ import { Search, Trash, Undo } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const TrashBox = () => {
+export const TrashBox: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const documents = useQuery(api.documents.getTrash);
@@ -25,7 +25,7 @@ export const TrashBox = () => {
   );
 
   const onClick = (documentId: string) => {
-    router.push(`/documents${documentId}`);
+    router.push(`/documents/${documentId}`);
   };
 
   const onRestore = (
@@ -53,9 +53,7 @@ export const TrashBox = () => {
       "Failed to delete note"
     );
 
-    if (params.docuemntId === documentId) {
-      router.push("/documents");
-    }
+    router.push("/documents");
   };
 
   if (documents === undefined) {
@@ -91,14 +89,14 @@ export const TrashBox = () => {
               <span className="truncate pl-2">{document.title}</span>
               <div className="flex items-center">
                 <button
-                  className="rounded-sm p-2 hover:bg-neutral-200"
+                  className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                   onClick={(e) => onRestore(e, document._id)}
                 >
                   <Undo className="w-4 h-4 text-muted-foreground" />
                 </button>
 
                 <ConfirmModal onConfirm={() => onRemove(document._id)}>
-                  <button className="rounded-sm p-2 hover:bg-neutral-200">
+                  <button className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600">
                     <Trash className="w-4 h-4 text-muted-foreground" />
                   </button>
                 </ConfirmModal>
