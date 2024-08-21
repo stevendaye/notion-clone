@@ -68,7 +68,7 @@ export const archive = mutation({
     if (!documentExists) throw new Error("Document cannot be found!");
 
     if (documentExists.userId !== userId)
-      throw new Error("Unauthorized Action");
+      throw new Error("Unauthorized action");
 
     /* Archive children of parent documents as well */
     const recursiveArchive = async (documentId: Id<"documents">) => {
@@ -127,7 +127,7 @@ export const restore = mutation({
     if (!documentExists) throw new Error("Document cannot be found!");
 
     if (documentExists.userId !== userId)
-      throw new Error("Unauthorized Action");
+      throw new Error("Unauthorized action");
 
     /* Restore children of parents documents as well */
     const recursiveRestore = async (documentId: Id<"documents">) => {
@@ -178,7 +178,7 @@ export const remove = mutation({
     if (!documentExists) throw new Error("Document cannot be found!");
 
     if (documentExists.userId !== userId)
-      throw new Error("Unauthorized Action");
+      throw new Error("Unauthorized action");
 
     const document = await ctx.db.delete(args.id);
 
@@ -219,7 +219,7 @@ export const getById = query({
 
     const userId = identity.subject;
 
-    if (document.userId !== userId) throw new Error("Unauthorized Action");
+    if (document.userId !== userId) throw new Error("Unauthorized action");
 
     return document;
   },
@@ -247,9 +247,53 @@ export const update = mutation({
     if (!documentExists) throw new Error("Document cannot be found");
 
     if (documentExists.userId !== userId)
-      throw new Error("Unauthorized Action");
+      throw new Error("Unauthorized action");
 
     const document = ctx.db.patch(args.id, { ...rest });
+
+    return document;
+  },
+});
+
+export const removeIcon = mutation({
+  args: { id: v.id("documents") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) throw new Error("You are not authenticated");
+
+    const userId = identity.subject;
+
+    const documentExists = await ctx.db.get(args.id);
+
+    if (!documentExists) throw new Error("DOcument cannot be found");
+
+    if (documentExists.userId !== userId)
+      throw new Error("Unauthorized action");
+
+    const document = ctx.db.patch(args.id, { icon: undefined });
+
+    return document;
+  },
+});
+
+export const removeCoverImage = mutation({
+  args: { id: v.id("documents") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) throw new Error("You are not authenticated");
+
+    const userId = identity.subject;
+
+    const documentExists = await ctx.db.get(args.id);
+
+    if (!documentExists) throw new Error("DOcument cannot be found");
+
+    if (documentExists.userId !== userId)
+      throw new Error("Unauthorized action");
+
+    const document = ctx.db.patch(args.id, { coverImage: undefined });
 
     return document;
   },

@@ -23,7 +23,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@clerk/clerk-react";
-import { handleToast } from "@/utils/toaster";
+import { handleToast } from "@/lib/toaster";
 
 interface ItemProps {
   id?: Id<"documents">;

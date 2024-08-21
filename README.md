@@ -1,6 +1,7 @@
 # Notion Clone | Note Taking App
 
-Production Link 🔗: **Coming Soon** 😉
+🔗 Production Link: **Coming Soon** 😉
+
 This is a lighweight version of Notion Note Taking App. This clone covers the core fundamental features of Notion and what it was designed for: **Taking Notes**.
 
 ## Status: In Progress
@@ -26,4 +27,4 @@ The system includes a real-time database for dynamic content updates, a Notion-s
 - npx convex dev (in one terminal)
 - npm run dev (in another terminal)
 
-**NB**: Environment variables are required for Convex and Clerck. Head to **https://docs.convex.dev/home** and **https://clerk.com/docs**. Follow instructions to get yours.
+**NB**: Environment variables are required for Convex and Clerck. Head to [Convex Docs](https://docs.convex.dev/home) & [Clerck Docs](https://clerk.com/docs). Follow instructions to get yours.

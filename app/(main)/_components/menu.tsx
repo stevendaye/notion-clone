@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/clerk-react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { handleToast } from "@/utils/toaster";
+import { handleToast } from "@/lib/toaster";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";

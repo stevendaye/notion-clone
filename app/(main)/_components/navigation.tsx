@@ -26,7 +26,7 @@ import { api } from "@/convex/_generated/api";
 import { UserItem } from "./user-item";
 import { Item } from "./item";
 import { DocumentList } from "./document-list";
-import { handleToast } from "@/utils/toaster";
+import { handleToast } from "@/lib/toaster";
 import { TrashBox } from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";

@@ -5,7 +5,7 @@ import { Spinner } from "@/components/spinner";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { handleToast } from "@/utils/toaster";
+import { handleToast } from "@/lib/toaster";
 import { useMutation, useQuery } from "convex/react";
 import { Search, Trash, Undo } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";

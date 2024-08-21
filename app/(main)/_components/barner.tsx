@@ -4,7 +4,7 @@ import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { handleToast } from "@/utils/toaster";
+import { handleToast } from "@/lib/toaster";
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import React from "react";
