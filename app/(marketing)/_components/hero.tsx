@@ -9,13 +9,13 @@ export const Hero: React.FC = () => {
           hidden md:block"
         >
           <Image
-            src={"/documents.png"}
+            src={"/hero.png"}
             alt="Documents"
             fill
             className="object-contain dark:hidden"
           />
           <Image
-            src={"/documents-dark.png"}
+            src={"/hero-dark.png"}
             alt="Documents"
             fill
             className="object-contain hidden dark:block"
