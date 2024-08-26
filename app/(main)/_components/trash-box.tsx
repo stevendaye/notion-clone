@@ -53,7 +53,7 @@ export const TrashBox: React.FC = () => {
       "Failed to delete note"
     );
 
-    router.push("/documents");
+    if (documentId === params.documentId) router.push("/documents");
   };
 
   if (documents === undefined) {

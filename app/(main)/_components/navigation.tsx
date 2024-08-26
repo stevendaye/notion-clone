@@ -11,7 +11,7 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useMutation } from "convex/react";
@@ -35,6 +35,7 @@ import { Navbar } from "./navbar";
 export const Navigation: React.FC = () => {
   const search = useSearch();
   const settings = useSettings();
+  const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 768px)");
   const pathname = usePathname();
@@ -115,7 +116,9 @@ export const Navigation: React.FC = () => {
   };
 
   const handleCreate = useCallback(() => {
-    const promise = create({ title: "Untitled" });
+    const promise = create({ title: "Untitled" }).then((documentId) => {
+      router.push(`/documents/${documentId}`);
+    });
 
     handleToast(
       promise,
@@ -123,7 +126,7 @@ export const Navigation: React.FC = () => {
       "New note created",
       "Failed to create a new note"
     );
-  }, [create]);
+  }, [create, router]);
 
   // Create New Page with command ctrl+i;
   useEffect(() => {

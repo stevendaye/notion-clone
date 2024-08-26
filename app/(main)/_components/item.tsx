@@ -78,7 +78,7 @@ export const Item = ({
     const promise = create({ title: "Untitled", parentDocument: id }).then(
       (documentId) => {
         if (!expanded) onExpand?.();
-        // router.push(`/documents/${documentId}`);
+        router.push(`/documents/${documentId}`);
       }
     );
 
@@ -95,7 +95,9 @@ export const Item = ({
 
     if (!id) return;
 
-    const promise = archive({ id });
+    const promise = archive({ id }).then(() => {
+      router.push(`/documents`);
+    });
 
     handleToast(
       promise,
@@ -129,12 +131,12 @@ export const Item = ({
       >
         {documentIcon ? (
           /* Custom Icon */
-          <div className="shrink-0 h-18px mr-2 text-muted-foreground">
+          <div className="shrink-0 text-[18px] mr-2 text-muted-foreground">
             {documentIcon}
           </div>
         ) : (
           /* Default Icon */
-          <Icon className="h-[18px] mr-2 shrink-0 text-muted-foreground" />
+          <Icon className="w-[18px] h-[18px] mr-2 shrink-0 text-muted-foreground" />
         )}
         <span className="truncate">{label}</span>
 

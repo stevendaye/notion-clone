@@ -15,10 +15,13 @@ import { useCoverImage } from "@/hooks/use-cover-image";
 
 interface ToolbarProps {
   initialData: Doc<"documents">;
-  preview?: boolean;
+  previewMode?: boolean;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({
+  initialData,
+  previewMode,
+}) => {
   const inputRef = useRef<ElementRef<"textarea">>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(initialData.title);
@@ -29,7 +32,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
   const coverImage = useCoverImage();
 
   const enableInput = () => {
-    if (preview) return;
+    if (previewMode) return;
 
     setIsEditing(true);
     setTimeout(() => {
@@ -66,10 +69,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
 
   return (
     <div className="pl-[54px] group relative">
-      {/* # Render document's icon if exist & is not in preview mode
+      {/* # Render document's icon if exist & is not in previewMode mode
           # while allowing the author to pick a new icon
       */}
-      {!!initialData.icon && !preview && (
+      {!!initialData.icon && !previewMode && (
         <div className="flex items-center gap-x-2 group/icon pt-6">
           <IconPicker onChange={onSelectIcon}>
             <p className="text-6xl hover:opacity-75 transition">
@@ -88,16 +91,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
         </div>
       )}
 
-      {/* Render Document's icon if exists & is in preview mode */}
-      {!!initialData.icon && preview && (
+      {/* Render Document's icon if exists & is in previewMode mode */}
+      {!!initialData.icon && previewMode && (
         <p className="text-6xl pt-6">{initialData.icon}</p>
       )}
 
       {/* # Allow the author to pick/add an icon if there is no icon
-          # & is not in preview mode
+          # & is not in previewMode mode
       */}
       <div className="flex items-center opacity-0 group-hover:opacity-100 gap-x-1 py-4">
-        {!initialData.icon && !preview && (
+        {!initialData.icon && !previewMode && (
           <IconPicker asChild onChange={onSelectIcon}>
             <Button
               size={"sm"}
@@ -109,7 +112,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
           </IconPicker>
         )}
 
-        {!initialData.coverImage && !preview && (
+        {!initialData.coverImage && !previewMode && (
           <Button
             size={"sm"}
             variant={"outline"}
@@ -121,7 +124,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ initialData, preview }) => {
         )}
       </div>
 
-      {isEditing && !preview ? (
+      {isEditing && !previewMode ? (
         <TextareaAutosize
           ref={inputRef}
           onBlur={disableInput}
