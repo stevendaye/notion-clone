@@ -4,7 +4,7 @@
 
 This is a lighweight version of Notion Note Taking App. This clone covers the core fundamental features of Notion and what it was designed for: **Taking Notes**.
 
-## Status: In Progress
+## Status: Completed
 
 ![Alt text](public/welcome-page.png)
 
