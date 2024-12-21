@@ -29,6 +29,7 @@ export const UserItem: React.FC = () => {
       await signOut();
       setTimeout(() => {
         router.push("/login");
+        location.reload();
       }, redirectAfter);
     } catch (error) {
       console.error("Error signing out:", error);
