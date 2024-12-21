@@ -1,6 +1,6 @@
 # Notion Clone | Note Taking App
 
-🔗 Production Link URL: [Note Taking App](https://note-clone-rho.vercel.app/) 😉
+🔗 Production Link URL: [Note Taking App](https://notion-clone-two-ruby.vercel.app/)
 
 This is a lighweight version of Notion Note Taking App. This clone covers the core fundamental features of Notion and what it was designed for: **Taking Notes**.
 
