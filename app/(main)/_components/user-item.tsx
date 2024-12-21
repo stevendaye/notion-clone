@@ -15,13 +15,24 @@ import {
 import { api } from "@/convex/_generated/api";
 
 import { ChevronsLeftRight, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const UserItem: React.FC = () => {
+  const router = useRouter();
   const user = useQuery(api.users.currentUser);
   const { signOut } = useAuthActions();
 
+  const redirectAfter = 100;
+
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+      setTimeout(() => {
+        router.push("/login");
+      }, redirectAfter);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
