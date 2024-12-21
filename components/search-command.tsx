@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { File } from "lucide-react";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/clerk-react";
+
+import { api } from "@/convex/_generated/api";
+import { useSearch } from "@/hooks/use-search";
 
 import {
   CommandDialog,
@@ -15,13 +16,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import { api } from "@/convex/_generated/api";
-import { useSearch } from "@/hooks/use-search";
+import { File } from "lucide-react";
 
 export const SearchCommand: React.FC = () => {
+  const user = useQuery(api.users.currentUser);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  const { user } = useUser();
   const router = useRouter();
   const documents = useQuery(api.documents.getSeach);
 
@@ -59,7 +59,7 @@ export const SearchCommand: React.FC = () => {
   return (
     <CommandDialog open={isOpen} onOpenChange={onClose}>
       <CommandInput
-        placeholder={`Search ${user?.fullName}'s Notion Clone`}
+        placeholder={`Search ${user?.name}'s Notion Clone`}
       ></CommandInput>
 
       <CommandList>

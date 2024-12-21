@@ -3,14 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { handleToast } from "@/lib/toaster";
-import { useUser } from "@clerk/clerk-react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { CirclePlus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const DocumentsPage = () => {
-  const { user } = useUser();
+  const user = useQuery(api.users.currentUser);
+
   const router = useRouter();
   const create = useMutation(api.documents.create);
 
@@ -45,7 +45,7 @@ const DocumentsPage = () => {
       />
 
       <h2 className="text-lg font-medium">
-        Welcome to {user?.firstName}&apos;s Notion Clone
+        Welcome to {user?.name?.split(" ")[0].toString()}&apos;s Notion Clone
       </h2>
       <Button onClick={onCreate}>
         <CirclePlus className="w-4 h-4 mr-2" />

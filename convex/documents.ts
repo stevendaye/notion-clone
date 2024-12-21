@@ -2,6 +2,7 @@ import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 /* Create a document */
 export const create = mutation({
@@ -10,11 +11,9 @@ export const create = mutation({
     parentDocument: v.optional(v.id("documents")),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated!");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const document = await ctx.db.insert("documents", {
       title: args.title,
@@ -34,11 +33,9 @@ export const getSidebar = query({
     parentDocument: v.optional(v.id("documents")),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated!");
-
-    const userId = identity.subject;
+    if (!userId) return null;
 
     const documents = await ctx.db
       .query("documents")
@@ -57,11 +54,9 @@ export const getSidebar = query({
 export const archive = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated!");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const documentExists = await ctx.db.get(args.id);
 
@@ -96,11 +91,9 @@ export const archive = mutation({
 /* Get archived documents */
 export const getTrash = query({
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
-
-    const userId = identity.subject;
+    if (!userId) return null;
 
     const documents = await ctx.db
       .query("documents")
@@ -116,11 +109,9 @@ export const getTrash = query({
 export const restore = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const documentExists = await ctx.db.get(args.id);
 
@@ -167,11 +158,9 @@ export const restore = mutation({
 export const remove = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const documentExists = await ctx.db.get(args.id);
 
@@ -188,11 +177,9 @@ export const remove = mutation({
 
 export const getSeach = query({
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not connected");
-
-    const userId = identity.subject;
+    if (!userId) return null;
 
     const documents = ctx.db
       .query("documents")
@@ -208,16 +195,15 @@ export const getSeach = query({
 export const getById = query({
   args: { documentId: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) return null;
+
     const document = await ctx.db.get(args.documentId);
 
     if (!document) throw new Error("Document cannot be Found");
 
     if (document.isPublished && !document.isArchived) return document;
-
-    if (!identity) throw new Error("You are not authtenticated");
-
-    const userId = identity.subject;
 
     if (document.userId !== userId) throw new Error("Unauthorized action");
 
@@ -235,11 +221,10 @@ export const update = mutation({
     isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
+    if (!userId) throw new Error("You are not authorized");
 
-    const userId = identity.subject;
     const { id, ...rest } = args;
 
     const documentExists = await ctx.db.get(args.id);
@@ -258,11 +243,9 @@ export const update = mutation({
 export const removeIcon = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const documentExists = await ctx.db.get(args.id);
 
@@ -280,11 +263,9 @@ export const removeIcon = mutation({
 export const removeCoverImage = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const userId = await getAuthUserId(ctx);
 
-    if (!identity) throw new Error("You are not authenticated");
-
-    const userId = identity.subject;
+    if (!userId) throw new Error("You are not authorized");
 
     const documentExists = await ctx.db.get(args.id);
 

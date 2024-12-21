@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Spinner } from "@/components/spinner";
 import Link from "next/link";
-import { SignInButton } from "@clerk/clerk-react";
 
 export const Header: React.FC = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -37,11 +36,11 @@ export const Header: React.FC = () => {
       )}
 
       {!isAuthenticated && !isLoading && (
-        <SignInButton mode="modal">
-          <Button>
+        <Button asChild>
+          <Link href={"/login"}>
             Get Notion Clone Free <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        </SignInButton>
+          </Link>
+        </Button>
       )}
     </div>
   );

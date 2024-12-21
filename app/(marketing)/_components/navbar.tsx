@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useScrollTop } from "@/hooks/use-scroll-top";
 import { useConvexAuth } from "convex/react";
 import { cn } from "@/lib/utils";
-import { SignInButton, UserButton } from "@clerk/clerk-react";
 
 import { Logo } from "./logo";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -29,26 +28,19 @@ export const Navbar: React.FC = () => {
 
         {!isAuthenticated && !isLoading && (
           <>
-            <SignInButton mode="modal">
-              <Button variant={"ghost"} size={"sm"}>
-                Log in
-              </Button>
-            </SignInButton>
-            <SignInButton mode="modal">
-              <Button size={"sm"}>Get Notion Clone Free</Button>
-            </SignInButton>
+            <Button variant={"ghost"} size={"sm"} asChild>
+              <Link href={"/login"}>Log in</Link>
+            </Button>
+            <Button size={"sm"} asChild>
+              <Link href={"/login"}>Get Notion Clone Free</Link>
+            </Button>
           </>
         )}
 
         {isAuthenticated && !isLoading && (
-          <>
-            <Button variant={"ghost"} size={"sm"} asChild>
-              <Link href={"/documents"}>Enter Notion Clone</Link>
-            </Button>
-
-            {/* Check Deprecation of afterSignOutUrl prop */}
-            <UserButton afterSwitchSessionUrl="/" />
-          </>
+          <Button variant={"ghost"} size={"sm"} asChild>
+            <Link href={"/documents"}>Enter Notion Clone</Link>
+          </Button>
         )}
         <ModeToggle />
       </div>

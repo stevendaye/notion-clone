@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://causal-panther-37.clerk.accounts.dev",
+      domain: process.env.CONVEX_SITE_URL,
       applicationID: "convex",
     },
   ],

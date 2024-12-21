@@ -22,8 +22,8 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <p className="text-xs flex items-start justify-center w-full py-5">
-        Made with ❤️ by Steven Audrey Daye 🇧🇯
+      <p className="text-xs flex items-center justify-center w-full py-5">
+        Lighweight Notion clone made with ❤️ by Steven Audrey Daye 🇧🇯
       </p>
     </div>
   );

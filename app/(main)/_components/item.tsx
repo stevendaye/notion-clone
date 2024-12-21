@@ -13,7 +13,7 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
   DropdownMenu,
@@ -22,7 +22,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useUser } from "@clerk/clerk-react";
 import { handleToast } from "@/lib/toaster";
 
 interface ItemProps {
@@ -58,8 +57,8 @@ export const Item = ({
 }: ItemProps) => {
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
   const router = useRouter();
-  const { user } = useUser();
 
+  const user = useQuery(api.users.currentUser);
   const create = useMutation(api.documents.create);
   const archive = useMutation(api.documents.archive);
 
@@ -124,7 +123,10 @@ export const Item = ({
         </button>
       )}
 
-      <button
+      <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={onClick}
         onClick={onClick}
         aria-label="Create Note"
         className="flex items-center group w-full"
@@ -206,7 +208,7 @@ export const Item = ({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <div className="text-xs text-muted-foreground p-2">
-                  Last Edited by: {user?.fullName}
+                  Last Edited by: {user?.name?.split(" ")[0].toString()}
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -219,7 +221,7 @@ export const Item = ({
             </button>
           </div>
         )}
-      </button>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,10 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "convex/react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuthActions } from "@convex-dev/auth/react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,12 +12,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { ChevronsLeftRight } from "lucide-react";
-import React from "react";
+import { api } from "@/convex/_generated/api";
+
+import { ChevronsLeftRight, LogOut } from "lucide-react";
 
 export const UserItem: React.FC = () => {
-  const { user } = useUser();
+  const user = useQuery(api.users.currentUser);
+  const { signOut } = useAuthActions();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <DropdownMenu>
@@ -21,10 +30,16 @@ export const UserItem: React.FC = () => {
         <div className="flex items-center text-sm w-full p-3 hover:bg-primary/5 cursor-pointer">
           <div className="gap-x-2 flex items-center max-w-[150px]">
             <Avatar className="w-4 h-4">
-              <AvatarImage src={user?.imageUrl} />
+              <AvatarImage
+                src={user?.image}
+                className="aspect-square rounded-md"
+              />
+              <AvatarFallback className="aspect-square bg-sky-400 text-white text-xs">
+                {user?.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {user?.fullName}&apo;s Notion Clone
+              {user?.name?.split(" ")[0].toString()}&apos;s Notion Clone
             </span>
           </div>
 
@@ -40,17 +55,23 @@ export const UserItem: React.FC = () => {
       >
         <div className="flex flex-col space-y-4 p-2">
           <p className="text-xs font-medium leading-none text-muted-foreground">
-            {user?.emailAddresses[0].emailAddress}
+            {user?.email}
           </p>
           <div className="flex items-center gap-x-2">
             <div className="rounded-md bg-secondary p-1">
               <Avatar className="w-8 h-8">
-                <AvatarImage src={user?.imageUrl} />
+                <AvatarImage
+                  src={user?.image}
+                  className="aspect-square rounded-md"
+                />
+                <AvatarFallback className="aspect-square bg-sky-400 text-white text-[16px]">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
             </div>
             <div className="space-y-1">
               <p className="text-sm line-clamp-1">
-                {user?.fullName}&apos;s Notion Clone
+                {user?.name?.split(" ")[0].toString()}&apos;s Notion Clone
               </p>
             </div>
           </div>
@@ -59,10 +80,11 @@ export const UserItem: React.FC = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          asChild
-          className="w-full cursor-pointer text-muted-foreground"
+          onClick={handleSignOut}
+          className="h-10 cursor-pointer"
         >
-          <SignOutButton>Log out</SignOutButton>
+          <LogOut className="size-4 mr-2" />
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

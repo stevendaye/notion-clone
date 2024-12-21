@@ -26,5 +26,3 @@ The system includes a real-time database for dynamic content updates, a Notion-s
 - npm i
 - npx convex dev (in one terminal)
 - npm run dev (in another terminal)
-
-**NB**: Environment variables are required for Convex and Clerck. Head to [Convex Docs](https://docs.convex.dev/home) & [Clerck Docs](https://clerk.com/docs). Follow instructions to get yours.

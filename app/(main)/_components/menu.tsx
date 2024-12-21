@@ -10,8 +10,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/clerk-react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { handleToast } from "@/lib/toaster";
 import { Button } from "@/components/ui/button";
@@ -24,8 +23,8 @@ interface MenuProps {
 
 export const Menu = ({ documentId }: MenuProps) => {
   const router = useRouter();
-  const { user } = useUser();
 
+  const user = useQuery(api.users.currentUser);
   const archive = useMutation(api.documents.archive);
 
   const onArchive = () => {
@@ -62,7 +61,7 @@ export const Menu = ({ documentId }: MenuProps) => {
         <DropdownMenuSeparator />
 
         <div className="text-xs text-muted-foreground p-2">
-          Last edited by: {user?.fullName}
+          Last edited by: {user?.name?.split(" ")[0].toString()}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
